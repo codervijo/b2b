@@ -8,7 +8,8 @@
 DOCKIMGNAME="mongo2"
 DOCKCONTAINER="MONGOCONTAINER"
 # docker pull mongo
-docker run --name ${DOCKCONTAINER} --restart=always -d -p 27017:27017 ${DOCKIMGNAME} mongod --auth
+#docker run --name ${DOCKCONTAINER} --restart=always -d -p 27017:27017 ${DOCKIMGNAME} mongod --auth 
+sudo docker run -p 27018:27017 -it --rm mongo2 mongod --smallfiles --bind_ip_all
 
 # Using the mongo "localhost exception" (https://docs.mongodb.org/v3.0/core/security-users/#localhost-exception) 
 # add a root user
@@ -31,7 +32,8 @@ exit
 # now you can connect with the admin user (from any mongo client >=3 )
 #  remember to use --authenticationDatabase "admin"
 sudo apt-get install -y mongodb-clients
-mongo -u "foouser" -p "foopwd" 127.0.0.1 --authenticationDatabase "admin"
+#mongo -u "foouser" -p "foopwd" 127.0.0.1 --authenticationDatabase "admin"
+sudo mongo 127.0.0.1:27018 --authenticationDatabase "admin"
 
 # If hosted on Azure set the docker host keep alive timeout to less than 240 seconds
 # that is the default keep alive time on Azure network infrastructure (Public Ip only)
