@@ -1,4 +1,6 @@
 FROM	debian:latest
+MAINTAINER Vijo Cherian codervijo@gmail.com
+
 RUN		apt-get -y update
 RUN		apt-get install -y apt-utils
 RUN		apt-get install -y redis-tools

@@ -1,4 +1,5 @@
 FROM ubuntu:18.04
+MAINTAINER Vijo Cherian codervijo@gmail.com
 
 RUN apt-get update
 
@@ -9,6 +10,9 @@ RUN dpkg --add-architecture i386 && apt-get update \
 
 # Install java
 RUN apt-get install -y openjdk-8-jdk-headless
+
+# Install other utilities
+RUN apt-get install -y vim git net-tools
 
 # Install gradle
 RUN apt-get install -y gradle

@@ -1,6 +1,7 @@
 # Used for building & testing wget from current working directory
 FROM ubuntu:latest
 MAINTAINER Vijo Cherian codervijo@gmail.com
+
 #COPY Apr17 /usr/src/wget/ --> USE -v for sharing directories.
 #WORKDIR /usr/src/glibc
 #TODO Lot more packages needed 

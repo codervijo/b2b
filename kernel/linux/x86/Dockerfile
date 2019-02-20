@@ -1,6 +1,6 @@
 # Dockerfile to build Linux kernel
 FROM ubuntu
-MAINTAINER Vijo Cherian
+MAINTAINER Vijo Cherian codervijo@gmail.com
 
 #RUN apt install -y vim
 #RUN apt install -y git
