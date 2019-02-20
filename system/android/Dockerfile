@@ -12,7 +12,7 @@ RUN dpkg --add-architecture i386 && apt-get update \
 RUN apt-get install -y openjdk-8-jdk-headless
 
 # Install other utilities
-RUN apt-get install -y vim git net-tools
+RUN apt-get install -y vim git net-tools ssh
 
 # Install gradle
 RUN apt-get install -y gradle

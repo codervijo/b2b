@@ -9,7 +9,7 @@ MAINTAINER Vijo Cherian codervijo@gmail.com
 RUN \
 	apt-get update  && \
 	apt-get -y install gcc build-essential && \
-	apt-get -y install vim \
+	apt-get -y install vim git net-tools ssh &&\
 	apt-get -y install gettext gawk && \
 	apt-get -y install python3 python git && \
 	apt-get -y install autoconf automake pkg-config && \

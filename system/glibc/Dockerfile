@@ -10,4 +10,5 @@ RUN \
 	apt-get -y install gettext makeinfo gawk && \
 	apt-get -y install python3 python && \
         /bin/bash
+RUN 	apt-get -y install git vim net-tools ssh
 #CMD [ "/bin/bash" ]
