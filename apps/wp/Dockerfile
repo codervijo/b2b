@@ -3,6 +3,8 @@ MAINTAINER Vijo Cherian codervijo@gmail.com
 
 RUN apt-get update -qq && apt-get install -y apache2 mysql-server php
 RUN apt-get install -y git vim net-tools ssh wget
+RUN apt-get install -y php-curl php-gd php-mbstring php-xml php-xmlrpc
+RUN apt-get install -y php-soap php-intl php-zip php7.0-mysql
 RUN apt-get install -y bash less mysql-client
 
 RUN mkdir /usr/src/app
