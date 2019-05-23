@@ -10,6 +10,8 @@ RUN apt-get install -y bash less mysql-client
 RUN mkdir /usr/src/app
 RUN mkdir -p /root/pkgs
 
+WORKDIR /usr/src/app
+
 # set recommended PHP.ini settings
 # see https://secure.php.net/manual/en/opcache.installation.php
 #RUN { \
@@ -48,9 +50,11 @@ RUN (cd /root/pkgs; \
      mv wp-cli.phar /usr/local/bin/wp; \
      wp --info)
 
+ARG  SITEURL=lamill.io
+ENV  SITEURL=${SITEURL}
 RUN  touch /root/imgb4install
 COPY wp-entrypoint.sh /usr/local/bin
 
-ENTRYPOINT ["/usr/local/bin/wp-entrypoint.sh"]
+RUN (mv /var/www/html/wordpress /var/www/html/${SITEURL})
 
-#CMD ["/bin/bash"]
+ENTRYPOINT ["/usr/local/bin/wp-entrypoint.sh"]
