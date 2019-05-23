@@ -32,13 +32,15 @@ if [ -e "/root/imgb4install" ]; then
 EOCONF
 
 	(cd /var/www/html/${SITEURL} && /usr/local/bin/wp core config   --allow-root --dbname=${DBNAME} --dbuser=${DBUSER} --dbpass=${DBPASS})
-	(cd /var/www/html/${SITEURL} && /usr/local/bin/wp core install  --allow-root --url=172.17.0.3 --title="Lamill Websystems" --admin_user=${SITEADMIN} --admin_password=${ADMINPASS} --admin_email=vik@lamill.us)
+	(cd /var/www/html/${SITEURL} && /usr/local/bin/wp core install  --allow-root --url=tester.lamill.io --title="Lamill Websystems" --admin_user=${SITEADMIN} --admin_password=${ADMINPASS} --admin_email=vik@lamill.us)
 
     a2ensite ${SITEURL}
 
 	a2enmod rewrite
     service apache2 restart
 	rm -f /root/imgb4install
+	echo "Completed Lamill Wordpress installation"
+	/bin/bash # XXX : hack to make run -d  wait forevah
 fi
 
 exec "$@"
