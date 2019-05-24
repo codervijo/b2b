@@ -1,5 +1,5 @@
 #!/bin/bash
-echo "Hello from inside docker container"
+echo "Hello from inside Lamill Wordpress docker container"
 
 DBNAME="wpdb"
 DBUSER="wpuser"
@@ -23,6 +23,11 @@ if [ -e "/root/imgb4install" ]; then
 <Directory /var/www/html/${SUBDIR}:8080>
     AllowOverride All
 </Directory>
+<Directory /var/www/>
+    Options Indexes FollowSymLinks
+    AllowOverride All
+    Require all granted
+</Directory>
 <VirtualHost ${SITEURL}>
     ServerAdmin webmaster@localhost
     ServerName ${SITEURL}
@@ -36,6 +41,8 @@ EOCONF
 	(cd /var/www/html/${SUBDIR} && /usr/local/bin/wp core   install  --allow-root --url=tester.lamill.io:8080 --title="Lamill Websystems" --admin_user=${SITEADMIN} --admin_password=${ADMINPASS} --admin_email=vik@lamill.us)
 	(cd /var/www/html/${SUBDIR} && /usr/local/bin/wp option update siteurl --allow-root $(wp option --allow-root get siteurl)/${SUBDIR})
 	(cd /var/www/html/${SUBDIR} && /usr/local/bin/wp option update home    --allow-root $(wp option --allow-root get home)/${SUBDIR})
+	(cd /var/www/html/${SUBDIR} && /usr/local/bin/wp rewrite structure --allow-root '/%postname%/')
+
 	chown -R www-data:www-data /var/www/html/
 
 	sed -i 's/Listen 80/Listen 8080/' /etc/apache2/ports.conf
