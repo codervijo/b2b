@@ -1,5 +1,5 @@
 #!/bin/bash
-echo "Hello from inside docker container"
+echo "Hello from inside Lamill Wordpress docker container"
 
 DBNAME="wpdb"
 DBUSER="wpuser"
