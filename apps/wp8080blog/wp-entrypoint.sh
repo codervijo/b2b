@@ -37,10 +37,10 @@ if [ -e "/root/imgb4install" ]; then
 </VirtualHost>
 EOCONF
 
-	(cd /var/www/html/${SUBDIR} && /usr/local/bin/wp core   config   --allow-root --dbname=${DBNAME} --dbuser=${DBUSER} --dbpass=${DBPASS})
-	(cd /var/www/html/${SUBDIR} && /usr/local/bin/wp core   install  --allow-root --url=tester.lamill.io:8080 --title="Lamill Websystems" --admin_user=${SITEADMIN} --admin_password=${ADMINPASS} --admin_email=vik@lamill.us)
-	(cd /var/www/html/${SUBDIR} && /usr/local/bin/wp option update siteurl --allow-root $(wp option --allow-root get siteurl)/${SUBDIR})
-	(cd /var/www/html/${SUBDIR} && /usr/local/bin/wp option update home    --allow-root $(wp option --allow-root get home)/${SUBDIR})
+	(cd /var/www/html/${SUBDIR} && /usr/local/bin/wp core    config   --allow-root --dbname=${DBNAME} --dbuser=${DBUSER} --dbpass=${DBPASS})
+	(cd /var/www/html/${SUBDIR} && /usr/local/bin/wp core    install  --allow-root --url=tester.lamill.io:8080 --title="Lamill Websystems" --admin_user=${SITEADMIN} --admin_password=${ADMINPASS} --admin_email=vik@lamill.us)
+	(cd /var/www/html/${SUBDIR} && /usr/local/bin/wp option  update siteurl --allow-root $(wp option --allow-root get siteurl)/${SUBDIR})
+	(cd /var/www/html/${SUBDIR} && /usr/local/bin/wp option  update home    --allow-root $(wp option --allow-root get home)/${SUBDIR})
 	(cd /var/www/html/${SUBDIR} && /usr/local/bin/wp rewrite structure --allow-root '/%postname%/')
 
 	chown -R www-data:www-data /var/www/html/
