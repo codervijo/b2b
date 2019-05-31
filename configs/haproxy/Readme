@@ -1,0 +1,15 @@
+NOT WORKING configuration
+
+To build:
+$ sudo docker build -twp2 .
+
+To start container:
+$ sudo docker run --name=wp22 -d -v $PWD:/usr/src/app --rm -i -t wp2
+
+To view logs from container:
+$ sudo docker logs -f f25f08b84e92db3d730d22fe7c5412b970ba2d30088a2c3d74588c8e0495abc3
+
+To get shell:
+$ sudo docker run  --name=wp26 -v $PWD:/usr/src/app --rm -i -t wp2 /bin/bash
+
+On the container, app is in /var/www/html/${SITEURL}
