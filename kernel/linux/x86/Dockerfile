@@ -1,10 +1,16 @@
 # Dockerfile to build Linux kernel
-FROM ubuntu
+FROM ubuntu:18.04
 MAINTAINER Vijo Cherian codervijo@gmail.com
 
-#RUN apt install -y vim
-#RUN apt install -y git net-tools ssh
-#RUN apt install -y ncurses-devel make gcc bc openssl-devel
+RUN apt update
+RUN apt upgrade -y
+RUN apt-get install -y vim
+RUN apt-get install -y git net-tools ssh
+RUN apt-get install -y ncurses-dev make gcc bc libssl-dev
+RUN apt-get install -y flex bison
+RUN apt-get install -y autoconf automake libtool
 
-COPY linux-stable /usr/src/linux
+ENV YACC "bison -y"
+ENV LEX  "flex"
 
+#COPY linux-stable /usr/src/linux
