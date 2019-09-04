@@ -20,7 +20,10 @@ RUN (cd /root/pkgs; \
      mv go /usr/local)
 
 ENV PATH   ${PATH}:/usr/local/go/bin
-ENV GOROOT /usr/src/app/go
+ENV GOPATH /usr/src/app/go
+ENV GOROOT /usr/local/go/
 ENV PATH   ${PATH}:${GOROOT}/bin
+
+RUN mkdir ${GOPATH}
 
 ENTRYPOINT ["/usr/local/bin/go1.8-entrypoint.sh"]
