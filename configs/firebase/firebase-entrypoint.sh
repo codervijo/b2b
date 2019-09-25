@@ -11,4 +11,5 @@ if [ -e "/root/imgb4install" ]; then
 	echo "Completed Lamill Firebase Go installation"
 fi
 
+firebase login
 exec "$@"
