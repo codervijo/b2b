@@ -9,6 +9,34 @@ RUN mkdir /usr/src/app
 
 WORKDIR /usr/src/app
 
+ENV USERNAME dev
+RUN useradd -rm -d /home/dev -s /bin/bash -g root -G sudo -u 1005 ${USERNAME}
+ 
+EXPOSE 19000
+EXPOSE 19001
+EXPOSE 19002
+ 
+#used by react native builder to set the ip address, other wise 
+#will use the ip address of the docker container.
+ENV REACT_NATIVE_PACKAGER_HOSTNAME="192.168.42.14"
+ 
+#COPY *.sh /
+#RUN chmod +x /entrypoint.sh \
+#    && chmod +x /get-source.sh
+ 
+#https://github.com/nodejs/docker-node/issues/479#issuecomment-319446283
+#should not install any global npm packages as root, a new user 
+#is created and used here
+USER $USERNAME
+ 
+#set the npm global location for dev user
+ENV NPM_CONFIG_PREFIX="/home/$USERNAME/.npm-global"
+ 
+#RUN mkdir -p ~/src \
+#    && mkdir ~/.npm-global \
+#    && npm install expo-cli --global
+
+
 # Install Node
 ENV NODE_VERS v13.2.0
 RUN mkdir /usr/src/app/node/
@@ -18,8 +46,8 @@ ENV NVM_DIR /usr/src/app/nod
 RUN  . /root/.nvm/nvm.sh && nvm install node
 ENV PATH   ${NVM_DIR}/versions/node/${NODE_VERS}/bin/:$PATH
 
-RUN     npm install exp --global
 RUN     npm install 
 RUN     npm install react-scripts@3.0.1 -g --silent
+RUN     npm install expo-cli --global
 
 #CMD	["npm", "start"]
