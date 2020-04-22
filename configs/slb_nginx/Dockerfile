@@ -16,4 +16,6 @@ COPY lamill.io   /etc/nginx/sites-available
 COPY lamill.io   /etc/nginx/sites-enabled
 RUN  touch       /root/imgb4install
 
+EXPOSE 80
+
 ENTRYPOINT ["/usr/local/bin/slb-entrypoint.sh"]
