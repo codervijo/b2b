@@ -5,7 +5,7 @@ MAINTAINER Vijo Cherian codervijo@gmail.com
 RUN mkdir /usr/src/app
 
 WORKDIR /usr/src/app
-COPY go1.12-entrypoint.sh /usr/local/bin
+COPY sante-entrypoint.sh /usr/local/bin
 
 # Install utils
 RUN apt-get update
@@ -20,6 +20,7 @@ RUN (cd /root/pkgs; \
      tar xvf go1.12.9.linux-amd64.tar.gz; \
      mv go /usr/local)
 
+
 # Install youtube-dl
 RUN wget https://yt-dl.org/downloads/latest/youtube-dl -O /usr/local/bin/youtube-dl
 RUN chmod a+rx /usr/local/bin/youtube-dl
@@ -32,4 +33,7 @@ ENV PATH   ${PATH}:${GOPATH}/bin
 
 RUN mkdir ${GOPATH}
 
-ENTRYPOINT ["/usr/local/bin/go1.12-entrypoint.sh"]
+# Go Dependencies
+RUN go get github.com/urfave/cli
+
+ENTRYPOINT ["/usr/local/bin/sante-entrypoint.sh"]
