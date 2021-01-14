@@ -41,7 +41,7 @@ WORKDIR /usr/src/app
 RUN (cd /root/pkgs ; \
      wget  "https://wordpress.org/wordpress-latest.tar.gz"; \
      tar zxvf wordpress-latest.tar.gz; \
-     mv wordpress /var/www/html; \
+     mv wordpress/* /var/www/html; \
      rm /var/www/html/index.html; \
      chown -R www-data:www-data /var/www/html)
 
@@ -52,11 +52,11 @@ RUN (cd /root/pkgs; \
      mv wp-cli.phar /usr/local/bin/wp; \
      wp --info)
 
-ARG  SITEURL=lamill.io
+ARG  SITEURL=wpdev.lamill.io
 ENV  SITEURL=${SITEURL}
 RUN  touch /root/imgb4install
-COPY wp-entrypoint.sh /usr/local/bin
+COPY wpdev-entrypoint.sh /usr/local/bin
 
-RUN (mv /var/www/html/wordpress /var/www/html/${SITEURL})
+#RUN (mv /var/www/html/wordpress /var/www/html/${SITEURL})
 
-ENTRYPOINT ["/usr/local/bin/wp-entrypoint.sh"]
+ENTRYPOINT ["/usr/local/bin/wpdev-entrypoint.sh"]
