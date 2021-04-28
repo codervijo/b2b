@@ -6,4 +6,4 @@ CONTAINER=jupyter1
 
 docker build -t ${CONTAINER} .
 
-docker run --privileged -it --rm -v $PWD:/data  --net=host ${CONTAINER} /bin/bash
+docker run --privileged -it --rm -v $PWD:/data  -p 8888:38888 ${CONTAINER} /bin/bash
