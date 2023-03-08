@@ -8,7 +8,7 @@ RUN apt-get -y install nodejs npm
 RUN apt-get -y install build-essential curl
 
 # Get Rust
-RUN curl https://sh.rustup.rs -sSf | bash -s -- -y
+#RUN curl https://sh.rustup.rs -sSf | bash -s -- -y
 
 RUN echo 'source $HOME/.cargo/env' >> $HOME/.bashrc
 ENV PATH="/root/.cargo/bin:${PATH}"
