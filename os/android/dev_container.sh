@@ -1,7 +1,9 @@
 #!/bin/bash
 
+GIT_TOP_DIR=$(git rev-parse --show-toplevel)
+test "${PWD##/${GIT_TOP_LEVEL}/}" != "${PWD}"
 # Make sure b2b directory exists and is git clone of right project
-[ -d ./b2b ] || (echo "B2B GIT repo not found, exiting"; exit 77); [ "$?" -eq 77 ]  && exit 2
+[ -d ./b2b ] || [ "${PWD##/${GIT_TOP_LEVEL}/}" == "${PWD}" ] || (echo "B2B GIT repo not found, exiting"; exit 77); [ "$?" -eq 77 ]  && exit 2
 
 CONTAINER=android2
 
@@ -23,3 +25,7 @@ sudo docker run --privileged --network=host -p19000:19000 -p19001:19001 -p19002:
 #-e REACT_NATIVE_PACKAGER_HOSTNAME=192.168.1.101 \
 #-e EXPO_DEVTOOLS_LISTEN_ADDRESS=0.0.0.0 \
 #--name=expo kerbe/expo start
+
+
+# Resources
+# https://andresand.medium.com/android-emulator-on-docker-container-f20c49b129ef

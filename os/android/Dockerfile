@@ -12,18 +12,18 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y autoconf automake libtool
 
 
 # Install some dependencies
-RUN dpkg --add-architecture i386 && apt-get update \
-    && apt-get install -y expect wget unzip \
-    libc6-i386 lib32stdc++6 lib32gcc1 lib32ncurses5 lib32z1
+RUN DEBIAN_FRONTEND=noninteractive  dpkg --add-architecture i386 && apt-get update \
+    && DEBIAN_FRONTEND=noninteractive  apt-get install -y expect wget unzip \
+    libc6-i386 lib32stdc++6 libgcc1 libncurses5 libz1
 
 # Install java
-RUN apt-get install -y openjdk-8-jdk-headless
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y openjdk-8-jdk-headless
 
 # Install other utilities
-RUN apt-get install -y vim git net-tools ssh
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y vim git net-tools ssh
 
 # Install gradle
-RUN apt-get install -y gradle
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y gradle
 
 # Install the Android SDK
 RUN cd /opt && wget --output-document=android-sdk.zip --quiet \
