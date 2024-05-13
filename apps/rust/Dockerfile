@@ -12,4 +12,5 @@ RUN apt-get -y install protobuf-compiler libprotobuf-dev
 RUN apt-get -y install net-tools vim file
 RUN /bin/bash -x /root/rustup.sh -y
 
+WORKDIR /usr/src/app
 #CMD		["lua", "/usr/src/luascope/scope"]
