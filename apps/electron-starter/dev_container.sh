@@ -1,7 +1,14 @@
 #!/bin/bash
 
 # Ensure the B2B directory exists and is the correct project
-[ -d ./b2b ] || (echo "B2B GIT repo not found, exiting"; exit 77); [ "$?" -eq 77 ]  && exit 2
+current_dir=$(pwd)
+root_dir=$(dirname $(dirname "$current_dir"))
+root_dirname=$(basename "$root_dir")
+if [ "$root_dirname" == "b2b" ]; then
+  echo "Running inside b2b"
+else
+  [ -d ./b2b ] || (echo "B2B GIT repo not found, exiting"; exit 77); [ "$?" -eq 77 ]  && exit 2
+fi
 
 CONTAINER=ele4
 
