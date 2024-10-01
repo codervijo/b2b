@@ -27,6 +27,6 @@ xhost +local:docker
 # Start the Docker container with X11 forwarding
 sudo docker run -it --rm \
     -v ${PWD}:/usr/src/app/ \
-    -p 9000:7454 \
+    -p 7002:7454 \
     ${CONTAINER} \
     /bin/bash
