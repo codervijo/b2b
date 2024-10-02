@@ -1,16 +1,37 @@
-FROM	node:16
-#FROM	debian:latest
-MAINTAINER Vijo Cherian codervijo@gmail.com
+# Use Ubuntu 22.04 as the base image
+FROM ubuntu:22.04
 
-RUN	apt-get -y update && apt-get -y upgrade
-RUN apt-get -y install git vim wget nodejs
-RUN	apt-get -y install procps net-tools ssh
-RUN     apt-get -y install curl
+# Set environment variables
+ENV DEBIAN_FRONTEND=noninteractive
+ENV PROMETHEUS_VERSION=2.47.0
 
-RUN wget https://github.com/prometheus/prometheus/releases/download/v2.46.0/prometheus-2.46.0.linux-amd64.tar.gz
-RUN tar -xvf prometheus-2.46.0.linux-amd64.tar.gz
-RUN mkdir /usr/src/app
+# Update and install necessary packages
+RUN apt-get update && \
+    apt-get install -y \
+    wget \
+    tar \
+    gzip && \
+    rm -rf /var/lib/apt/lists/*
 
-WORKDIR /usr/src/app
+# Create a directory for Prometheus
+RUN mkdir /prometheus
 
-#CMD	["npm", "start"]
+# Download and extract Prometheus
+RUN wget -q https://github.com/prometheus/prometheus/releases/download/v${PROMETHEUS_VERSION}/prometheus-${PROMETHEUS_VERSION}.linux-amd64.tar.gz && \
+    tar -xzf prometheus-${PROMETHEUS_VERSION}.linux-amd64.tar.gz --strip-components=1 -C /prometheus && \
+    rm prometheus-${PROMETHEUS_VERSION}.linux-amd64.tar.gz
+
+# Set the environment variable for Prometheus
+ENV PROMETHEUS_HOME=/prometheus
+
+# Expose Prometheus port
+EXPOSE 9090
+
+# Copy the Prometheus configuration file (if any)
+# COPY prometheus.yml /prometheus/prometheus.yml
+
+# Set the working directory
+WORKDIR /prometheus
+
+# Command to run Prometheus
+CMD ["./prometheus", "--config.file=./prometheus.yml"]
