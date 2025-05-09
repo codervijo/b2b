@@ -1,11 +1,21 @@
-FROM debian:latest
-MAINTAINER Vijo Cherian codervijo@gmail.com
+FROM debian:stable
+LABEL MAINTAINER="Vijo Cherian codervijo@gmail.com"
 
-RUN apt-get update -qq && apt-get install -y apache2 mysql-server php
+
+# Prevent interactive prompts
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update -qq && \
+    apt-get install -y apache2 mariadb-server php php-mysql
 RUN apt-get install -y git vim net-tools ssh wget
 RUN apt-get install -y php-curl php-gd php-mbstring php-xml php-xmlrpc
-RUN apt-get install -y php-soap php-intl php-zip php7.0-mysql
-RUN apt-get install -y bash less mysql-client
+RUN apt-get update -qq && \
+    apt-get install -y \
+    php-soap \
+    php-intl \
+    php-zip \
+    php-mysql
+RUN apt-get install -y bash less default-mysql-client
 
 RUN mkdir /usr/src/app
 RUN mkdir -p /root/pkgs
