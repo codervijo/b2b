@@ -1,0 +1,27 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: umami-db
+    restart: always
+    environment:
+      POSTGRES_USER: umami
+      POSTGRES_PASSWORD: umami
+      POSTGRES_DB: umami
+    volumes:
+      - umami-db-data:/var/lib/postgresql/data
+
+  umami:
+    image: ghcr.io/umami-software/umami:postgresql-latest
+    container_name: umami-app
+    restart: always
+    ports:
+      - "5000:3000"
+    environment:
+      DATABASE_URL: postgresql://umami:umami@db:5432/umami
+    depends_on:
+      - db
+
+volumes:
+  umami-db-data:
