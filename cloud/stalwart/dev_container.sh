@@ -1,8 +1,10 @@
 #!/bin/bash
 
-CONTAINER=st1
+CONTAINER=st4
 HOST_PORT=3400
 CONTAINER_PORT=3445
+CONTAINER_BASE="stalwartlabs/mail-server:latest"
+CONTAINER_NAME="Stalwart Mail"
 VOLUME_MOUNT="${PWD}:/usr/src/app/"
 
 # Usage
@@ -28,7 +30,12 @@ container_running() {
     sudo docker ps -q -f name="^${CONTAINER}$" | grep -q .
 }
 
-# Start container
+# Check if docker-compose file exists
+compose_exists() {
+    [[ -f docker-compose.yml || -f compose.yaml ]]
+}
+
+# Start container (manual docker run fallback)
 start_container() {
     if container_running; then
         echo "Container ${CONTAINER} is already running"
@@ -40,29 +47,47 @@ start_container() {
     fi
 }
 
+# Start container via compose if available
+start_with_compose() {
+    echo "Compose file detected. Using docker compose..."
+    sudo docker compose up --build -d
+}
+
 # Main logic
 if [ $# -eq 0 ]; then
-    build_image
-    start_container
-    sudo docker exec -it ${CONTAINER} /bin/bash
+    if compose_exists; then
+        start_with_compose
+    else
+        build_image
+        start_container
+    fi
+    sudo docker exec -it ${CONTAINER} /bin/bash || true
     exit 0
 fi
 
 case "$1" in
     start)
-        build_image
-        start_container
+        if compose_exists; then
+            start_with_compose
+        else
+            build_image
+            start_container
+        fi
         ;;
     shell)
-        if container_running; then
-            sudo docker exec -it ${CONTAINER} /bin/bash
+        CONTAINER=$(docker ps --filter "ancestor=${CONTAINER_BASE}" --format "{{.ID}}" | head -n 1)
+
+        if [ -n "$CONTAINER" ]; then
+            sudo docker exec -it "$CONTAINER" /bin/sh
         else
-            echo "Container ${CONTAINER} is not running"
+            echo "No running ${CONTAINER_NAME} container found."
             exit 1
         fi
         ;;
     stop)
-        if container_running; then
+        if compose_exists; then
+            sudo docker compose down
+        elif container_running; then
             sudo docker stop ${CONTAINER}
             echo "Container ${CONTAINER} stopped"
         else
@@ -71,7 +96,9 @@ case "$1" in
         fi
         ;;
     delete)
-        if container_exists; then
+        if compose_exists; then
+            sudo docker compose down --volumes --remove-orphans
+        elif container_exists; then
             if container_running; then
                 sudo docker stop ${CONTAINER}
             fi
