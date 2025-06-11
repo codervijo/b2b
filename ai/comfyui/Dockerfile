@@ -28,13 +28,13 @@ RUN useradd -ms /bin/bash comfy
 
 # Switch to comfy user
 USER comfy
-WORKDIR /usr/src/app/ComfyUI
-RUN pip3 install --upgrade pip && \
-    pip3 install --user -r requirements.txt
-RUN python3 main.py
+
 
 # Expose port
 EXPOSE 8188
 
-# Run ComfyUI
-CMD ["python3", "main.py", "--listen", "0.0.0.0"]
+# Copy entrypoint script
+COPY entrypoint.sh /usr/src/app/entrypoint.sh
+
+# Default command
+CMD ["/usr/src/app/entrypoint.sh"]
