@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # Config
-CONTAINER="cai4"
+CONTAINER="cai5"
 HOST_PORT=6400
 CONTAINER_PORT=3445
 APP_DIR="${PWD}"
