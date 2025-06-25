@@ -15,4 +15,6 @@ cd /usr/src/app/ComfyUI
 pip3 install --upgrade pip && \
 pip3 install --user -r requirements.txt
 
+pip3 install comfy-cli
+
 python3 main.py
