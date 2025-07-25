@@ -1,10 +1,9 @@
 # Use Ubuntu as the base image
 FROM ubuntu:22.04
 
-# Prevent interactive prompts during package install
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Install base dependencies
+# Install system dependencies, browser dependencies, and Python
 RUN apt-get update && apt-get install -y \
     curl \
     wget \
@@ -22,32 +21,70 @@ RUN apt-get update && apt-get install -y \
     libxrandr2 \
     libgbm-dev \
     libgtk-3-0 \
-    fonts-liberation \
-    xdg-utils \
     libu2f-udev \
+    libgl1 \
+    libglib2.0-0 \
+    libenchant-2-2 \
+    libwoff1 \
+    libopus0 \
+    libwebpdemux2 \
+    libgdk-pixbuf2.0-0 \
+    libevent-2.1-7 \
+    libvpx7 \
+    libopenjp2-7 \
+    libxslt1.1 \
+    fonts-liberation \
+    fonts-ipafont-gothic \
+    libvulkan1 \
+    xdg-utils \
+    locales \
     unzip \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+    make \
+    build-essential \
+    python3 \
+    python3-pip \
+    python3-venv \
+    x11-apps
+
+# Set locale
+RUN locale-gen en_US.UTF-8
+ENV LANG=en_US.UTF-8
+ENV LANGUAGE=en_US:en
+ENV LC_ALL=en_US.UTF-8
 
 # Install Node.js and pnpm
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
     apt-get update && apt-get install -y nodejs && \
     corepack enable && corepack prepare pnpm@latest --activate
 
-# Set working directory
-WORKDIR /usr/src/app
+# Install uv (latest version from GitHub releases)
+RUN curl -sSL https://astral.sh/uv/install.sh | bash && cp /root/.local/bin/uv /usr/local/bin
 
-# Copy package.json and pnpm-lock.yaml
-COPY package.json ./
+# Add uv to PATH (assumes default install path ~/.cargo/bin/uv)
+ENV PATH="/root/.local/bin:$PATH"
 
-# Copy remaining app files
-COPY . .
+# Set working directory for your app
+WORKDIR /usr/src/app/workspace
 
+# Copy app files
+COPY . /usr/src/app/workspace
+
+# Set up pnpm
 RUN SHELL=/bin/bash pnpm setup
 ENV PATH="$(pnpm bin -g):$PATH"
 
-# Install Playwright browsers and dependencies
+# Install Node dependencies
+ENV CI=true
 RUN pnpm install
-RUN pnpm exec playwright install --with-deps
 
-# Default command (you can override it at runtime)
+# Install Playwright and Chromium
+RUN pnpm exec playwright install --with-deps chromium
+
+# Optional: Set display if using headed browser (e.g., with xvfb)
+ENV DISPLAY=:0
+
+# Set working directory
+WORKDIR /usr/src/app
+
+# Default command
 CMD ["pnpm", "test"]
