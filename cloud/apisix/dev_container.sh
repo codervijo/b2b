@@ -1,33 +1,48 @@
 #!/bin/bash
+set -euo pipefail
 
-# Ensure the B2B directory exists and is the correct project
-current_dir=$(pwd)
-root_dir=$(dirname $(dirname "$current_dir"))
-root_dirname=$(basename "$root_dir")
-if [ "$root_dirname" == "b2b" ]; then
-  echo "Running inside b2b"
-else
-  [ -d ./b2b ] || (echo "B2B GIT repo not found, exiting"; exit 77); [ "$?" -eq 77 ]  && exit 2
-fi
+usage() {
+    echo "Usage: $0 {run|start|stop|delete|shell|prune}"
+    exit 1
+}
 
-CONTAINER=api1
+start_stack() {
+    echo "Starting Apache APISIX..."
+    docker compose up -d
+    echo ""
+    echo "Access: http://localhost:9000"
+}
 
-# Make symlink to docker for this dev environment
-#cp b2b/apps/tauri1/Dockerfile . || /bin/true
+main() {
+    local cmd="${1:-}"
+    [[ -z "$cmd" ]] && usage
 
-# Init container
-sudo docker build --tag ${CONTAINER}:latest --cache-from ${CONTAINER}:latest -t ${CONTAINER} . || sudo docker build -t ${CONTAINER} .
+    case "$cmd" in
+        run)
+            start_stack
+            xdg-open "http://localhost:9000" 2>/dev/null || echo "Open: http://localhost:9000"
+            ;;
+        start)
+            start_stack
+            ;;
+        stop)
+            docker compose stop
+            echo "Stopped"
+            ;;
+        delete)
+            docker compose down --volumes --remove-orphans
+            echo "Deleted (volumes removed)"
+            ;;
+        shell)
+            docker compose ps --services | head -1 | xargs -I{} docker compose exec {} /bin/sh
+            ;;
+        prune)
+            docker system prune --volumes --force
+            ;;
+        *)
+            usage
+            ;;
+    esac
+}
 
-# Start Dev container
-#sudo docker run -v${PWD}:/usr/src/app/ -p7000:3000 -it ${CONTAINER}  /bin/bash
-
-# Allow Docker containers to connect to the X server
-xhost +local:docker
-
-# Start the Docker container with X11 forwarding
-sudo docker run -it --rm \
-    --env="QT_X11_NO_MITSHM=1" \
-    -v ${PWD}:/usr/src/app/ \
-    -p 7002:7454 \
-    ${CONTAINER} \
-    /bin/bash
+main "$@"
