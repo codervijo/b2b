@@ -1,11 +1,11 @@
 FROM	node:18
 #FROM	debian:latest
-MAINTAINER Vijo Cherian codervijo@gmail.com
+LABEL MAINTAINER="Vijo Cherian codervijo@gmail.com"
 
 RUN	apt-get -y update && apt-get -y upgrade
 RUN apt-get -y install git vim wget nodejs
 RUN	apt-get -y install procps net-tools ssh
-RUN     apt-get -y install curl
+RUN apt-get -y install curl
 
 RUN mkdir /usr/src/app
 
