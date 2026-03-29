@@ -1,0 +1,43 @@
+services:
+  heyform:
+    image: heyform/community-edition:latest
+    container_name: heyform
+    ports:
+      - "8000:8000"
+    environment:
+      APP_HOMEPAGE_URL: http://localhost:8000
+      SESSION_KEY: ${SESSION_KEY:-mydevsessionkey0123456789}
+      FORM_ENCRYPTION_KEY: ${FORM_ENCRYPTION_KEY:-myformkey1234567890123456789012345678}
+      MONGO_URI: mongodb://mongo:27017/heyform
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    depends_on:
+      - mongo
+      - redis
+    networks:
+      - hey-net
+
+  mongo:
+    image: mongo:5.0
+    container_name: mongo
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - hey-net
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    command: redis-server --appendonly yes --protected-mode no
+    volumes:
+      - redis-data:/data
+    networks:
+      - hey-net
+
+volumes:
+  mongo-data:
+  redis-data:
+
+networks:
+  hey-net:
+
