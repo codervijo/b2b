@@ -1,0 +1,37 @@
+# vapi — container for the Millie voice control plane
+
+Runtime image for `~/work/projects/droyfun/millie` (ADR-0005: Millie has no
+host Python; everything runs in here).
+
+Vapi itself is a hosted HTTP service at api.vapi.ai — there is no Vapi server
+to run locally and no official Vapi image. This container holds *our* client
+side: Python + uv + millie's dependencies. Millie talks to Vapi over HTTPS
+with httpx; the Vapi Python SDK is deliberately not used (millie ADR-0003).
+
+## Build
+
+The Dockerfile installs millie's dependencies from millie's own
+`pyproject.toml`, so **the build context is the millie repo, not this
+directory**:
+
+    ./build.sh                     # uses the default millie path
+    ./build.sh /path/to/millie     # or point it somewhere else
+
+Equivalent to:
+
+    docker build -f Dockerfile -t millie-dev /path/to/millie
+
+One source of truth for dependencies (millie's `pyproject.toml`); the image
+definition lives here with the other AI tool sandboxes.
+
+## Use
+
+From the millie repo — the launcher builds on demand and mounts the narrow
+write surface:
+
+    bin/millie doctor
+    bin/millie shell
+
+`dev_container.sh` is the central-builder script, kept here for parity with
+the other `ai/*` sandboxes; millie's own `make buildsh` uses the copy in
+`~/work/projects/builder/`.
